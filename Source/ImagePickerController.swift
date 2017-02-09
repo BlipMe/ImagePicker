@@ -102,6 +102,10 @@ open class ImagePickerController: UIViewController {
     super.init(coder: aDecoder)
   }
 
+  public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+    super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+  }
+
   // MARK: - View lifecycle
 
   open override func viewDidLoad() {
