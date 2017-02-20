@@ -55,6 +55,16 @@ class CameraView: UIViewController, CLLocationManagerDelegate, CameraManDelegate
     return label
     }()
 
+  lazy var cameraDisabledLabel: UILabel = { [unowned self] in
+    let label = UILabel()
+    label.font = self.configuration.noCameraFont
+    label.textColor = self.configuration.noCameraColor
+    label.text = "Tap to enable camera"
+    label.sizeToFit()
+
+    return label
+    }()
+
   lazy var noCameraButton: UIButton = { [unowned self] in
     let button = UIButton(type: .system)
     let title = NSAttributedString(string: self.configuration.settingsTitle,
@@ -88,6 +98,7 @@ class CameraView: UIViewController, CLLocationManagerDelegate, CameraManDelegate
   var animationTimer: Timer?
   var locationManager: LocationManager?
   var startOnFrontCamera: Bool = false
+  var cameraStarted: Bool = false
 
 
   public init(configuration: Configuration? = nil) {
@@ -120,7 +131,8 @@ class CameraView: UIViewController, CLLocationManagerDelegate, CameraManDelegate
     view.addGestureRecognizer(tapGestureRecognizer)
 
     cameraMan.delegate = self
-    cameraMan.setup(self.startOnFrontCamera)
+
+    view.addSubview(cameraDisabledLabel)
   }
 
   override func viewDidAppear(_ animated: Bool) {
@@ -161,6 +173,9 @@ class CameraView: UIViewController, CLLocationManagerDelegate, CameraManDelegate
 
     noCameraButton.center = CGPoint(x: centerX,
       y: noCameraLabel.frame.maxY + 20)
+
+    cameraDisabledLabel.center = CGPoint(x: centerX,
+                                   y: view.bounds.height / 2 - 40)
 
     blurView.frame = view.bounds
     containerView.frame = view.bounds
@@ -249,6 +264,12 @@ class CameraView: UIViewController, CLLocationManagerDelegate, CameraManDelegate
 
   func tapGestureRecognizerHandler(_ gesture: UITapGestureRecognizer) {
     let touch = gesture.location(in: view)
+
+    if (!self.cameraStarted) {
+      cameraMan.setup(self.startOnFrontCamera)
+      cameraDisabledLabel.removeFromSuperview()
+      self.cameraStarted = true
+    }
 
     focusImageView.transform = CGAffineTransform.identity
     animationTimer?.invalidate()
