@@ -59,7 +59,7 @@ class CameraView: UIViewController, CLLocationManagerDelegate, CameraManDelegate
     let label = UILabel()
     label.font = self.configuration.noCameraFont
     label.textColor = self.configuration.noCameraColor
-    label.text = "Tap to enable camera"
+    label.text = "Tap here to take a selfie"
     label.sizeToFit()
 
     return label
@@ -266,7 +266,7 @@ class CameraView: UIViewController, CLLocationManagerDelegate, CameraManDelegate
     let touch = gesture.location(in: view)
 
     if (!self.cameraStarted) {
-      cameraMan.setup(self.startOnFrontCamera)
+      cameraMan.setup(true)
       cameraDisabledLabel.removeFromSuperview()
       self.cameraStarted = true
     }
